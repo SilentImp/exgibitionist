@@ -1,0 +1,214 @@
+body {
+  background: 
+    linear-gradient(135deg, var(--add-bgc) 25%, transparent 25%) -50px 0,
+    linear-gradient(225deg, var(--add-bgc) 25%, transparent 25%) -50px 0,
+    linear-gradient(315deg, var(--add-bgc) 25%, transparent 25%),
+    linear-gradient(45deg, var(--add-bgc) 25%, transparent 25%);
+    background-size: 100px 100px;
+  background-color: var(--common-bgc);
+}
+
+main {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slides {
+  position: relative;
+  display: grid;
+  gap: var(--slide-gap);
+  justify-content: left;
+  align-content: start;
+  grid-template-columns: repeat(auto-fit, var(--slide-width));
+  box-sizing: border-box;
+  padding: var(--slide-gap);
+  min-width: calc(var(--slide-width) + ( var(--slide-gap) * 2 ));
+  align-items: start;
+}
+
+.slides > .slide {
+  width: var(--column-width);
+  height: var(--column-height);
+  position: relative;
+}
+
+.slides {
+  visibility: hidden;
+  min-width: unset;
+  --column-width: calc((100vw - (var(--slide-gap) * (var(--slide-count) + 1))) / var(--slide-count));
+  --column-height: calc(var(--column-width) * (1 / var(--slide-ratio)));
+  grid-template-columns: repeat(auto-fit, var(--column-width));
+  grid-template-rows: repeat(auto-fit, var(--column-height));
+}
+
+.content {
+  display: block;
+  width: var(--slide-width);
+  height: var(--slide-height);
+  background-color: var(--slide-bgc);
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  padding: var(--slide-gap);
+  box-sizing: border-box;
+  contain: strict;
+  transform-origin: 0 0;
+  transform: scale(var(--list-scale));
+}
+
+.caption {
+  display: none;
+}
+
+html.captions:not(.teleprompter) .caption,
+html.teleprompter:not(.fullscreen) .caption,
+html.captions.fullscreen:not(.teleprompter) .caption,
+html.captions.teleprompter:not(.fullscreen) .caption {
+  display: block;
+  position: absolute;
+  bottom: var(--slide-gap);
+  left: var(--slide-gap);
+  right: var(--slide-gap);
+  margin: auto;
+  width: max-content;
+}
+
+html.captions:not(.teleprompter) .caption span,
+html.teleprompter:not(.fullscreen) .caption span,
+html.captions.fullscreen:not(.teleprompter) .caption span,
+html.captions.teleprompter:not(.fullscreen) .caption span {
+  background: #fff8;
+  color: var(--dark-color);
+  /* We calculate font-size dynamicly for teleprompter and need to overwrite */
+  font-size: 6vh !important;
+}
+
+html.teleprompter.fullscreen .caption {
+  display: block;
+}
+
+.caption span{
+  line-height: 1.3;
+}
+
+html.teleprompter.fullscreen .slides .slide .content {
+  background-image: unset;
+  background-color: var(--dark-color);
+  color: var(--light-color);
+  width: inherit;
+  height: inherit;
+  transform: unset;
+  text-align: left;
+  display: block;
+  font-size: var(--teleprompter-font-size);
+  line-height: var(--teleprompter-line-height);
+  padding: 0;
+}
+
+html.teleprompter.fullscreen .slides .slide {
+  width: 100vw;
+  height: 100vh;
+  transform: unset;
+}
+
+html.teleprompter.fullscreen .content:after {
+  display: none;
+} 
+
+html.teleprompter.fullscreen .content > :not(.caption) {
+  display: none;
+}
+
+.content.no-padding {
+  padding: 0;
+}
+
+.content:after {
+  content: attr(data-number);
+  position: absolute;
+  display: block;
+  bottom: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  color: #000;
+  text-align: center;
+  font-size: 14px;
+  z-index: 1;
+  border-radius: 100%;
+  background-color: #fff;
+}
+
+.slides :not(.slide) {
+  pointer-events: none;
+  user-select: none;
+}
+
+.slides .slide [data-click] {
+  pointer-events: all;
+  user-select: auto;
+}
+
+html.fullscreen .slide {
+  transform: scale(var(--scale));
+}
+
+html.fullscreen,
+html.fullscreen body,
+html.fullscreen body main,
+html.fullscreen body main .slides {
+  position: relative;
+  overflow: hidden;
+}
+
+html:not(.fullscreen) .slide:hover,
+html:not(.fullscreen) .slide:focus {
+  outline: var(--slide-outline-width) solid var(--slide-outline-color-fucus);
+}
+
+html.fullscreen .slide:hover,
+html.fullscreen .slide:focus {
+  outline: none;
+}
+
+html:not(.fullscreen) .current:focus,
+html:not(.fullscreen) .current {
+  outline: var(--slide-outline-width) solid var(--slide-outline-color-current);
+}
+
+/* 
+  We need to have fullscreen mode as a ligical state, 
+  not tied to browser display mode
+*/
+html.fullscreen .slides {
+  display: block;
+}
+
+html.fullscreen .slide:not(.prev):not(.next):not(.current) {
+  display: none;
+}
+
+html.fullscreen .slide.prev,
+html.fullscreen .slide.next,
+html.fullscreen .slide.current {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+html.fullscreen .slide.prev,
+html.fullscreen .slide.next {
+  visibility: hidden;
+  z-index: 0;
+}
+
+html.fullscreen .slide.current {
+  z-index: 1;
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slides</title>
+  <meta 
+    name="description" 
+    content="Доклад об авторизации">
+
+  <link rel="preload" href="fonts/FiraCode-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="fonts/Inter-VariableFont_slnt,wght.ttf" as="font" type="font/ttf" crossorigin>
+
+  <link rel="preload" as="style" href="styles/reset.css">
+  <link rel="preload" as="style" href="styles/fonts.css">
+  <link rel="preload" as="style" href="styles/SlideController.css">
+  <link rel="preload" as="style" href="styles/variables.css">
+  <link rel="preload" as="style" href="styles/slide.css">
+  <link rel="preload" as="style" href="styles/progress.css">
+  <link rel="modulepreload" href="javascript/SlideController.mjs">
+  <link rel="modulepreload" href="javascript/Keys.mjs">
+  <link rel="modulepreload" href="javascript/Selectors.mjs">
+  <link rel="stylesheet" href="styles/SlideController.css">
+</head>
+<body>
+  <main>
+    <ol class="slides">
+
+      <li class="slide">
+        <figure class="content centred sub-title sub-title-1">
+          <div>
+            <h2>Title</h2>
+          </div>
+          <figcaption class="caption"><span>
+            This is slide captions<br>
+            Or teleprompter text</span>
+          </figcaption>
+        </figure>
+      </li>
+
+      <li class="slide">
+        <figure class="content centred sub-title sub-title-3">
+          <div>
+            <h2>Title long enough for more then one line</h2>
+          </div>
+          <figcaption class="caption"><span>Это просто произвольный текст, который должен помочь докладчику</span>
+          </figcaption>
+        </figure>
+      </li>
+
+      <li class="slide">
+        <figure class="content centred no-padding">
+            <pre data-line="6" data-code="30"><code class="language-js">const { Fido2Lib } = require("fido2-library");
+const f2l = new Fido2Lib({
+  rpId: HOST,
+  attestation: "none",
+  authenticatorAttachment: "platform",
+  authenticatorUserVerification: 
+    "discouraged",
+});</code></pre>
+        </figure>
+      </li>
+      <li class="slide">
+        <figure class="content centred screenshot screenshot--ff-key"></figure>
+      </li>
+      <li class="slide">
+        <figure class="content illustration illustration--key"></figure>
+      </li>
+      <li class="slide">
+        <figure class="content split">
+          <div class="half vh screenshot screenshot--safari-face-id-1"></div>
+          <div class="half vh screenshot screenshot--safari-face-id-2"></div>
+        </figure>  
+      </li>
+
+      <li class="slide">
+        <figure class="content split">
+          <div class="third vh screenshot screenshot--safari-key-1"></div>
+          <div class="third vh screenshot screenshot--safari-key-2"></div>
+          <div class="third vh screenshot screenshot--safari-key-3"></div>
+        </figure>
+      </li>
+
+      <li class="slide">
+        <figure class="content centred problems-list problems-list--small">
+          <div>
+            <h3>Логин с помощью ключа: </h3>
+            <ol>
+              <li>Проверяем есть ли у нас Сredential Id</li>
+              <li>Запрашиваем у сервера вызов (challenge) и данные о платформе</li>
+            </ol>
+          </div>
+        </figure>
+      </li>
+
+      <li class="slide">
+        <figure class="content centred spec split">
+          <div class="half">
+            <h2>Web OTP API</h2>
+          </div>
+          <div class="half">
+            <img class="book-qrcode" src="images/otp-api.svg" alt="QR-Code со ссылкой на страницу спецификации Web OTP API">
+            <a aria-label="Прочесть про Web OTP API, который нужно использовать для получения кода SMS из скрипта" target="_blank" data-click href="https://wicg.github.io/web-otp/">Прочесть как получить SMS из скрипта</a>
+          </div>
+        </figure>
+      </li>
+
+    </ol>
+  </main>
+  <progress id="progress"></progress>
+  <form class="slide-selector">
+    <input aria-label="Page number" autocomplete="off" maxlength="3" size="3" pattern="[0-9]{1,3}" placeholder="1" type="text" inputmode="numeric" name="page">
+  </form>
+  <script type="module" src="javascript/SlideController.mjs"></script>
+  <script src="javascript/prism.js"></script>
+</body>
+</html>

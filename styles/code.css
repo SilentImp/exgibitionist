@@ -1,0 +1,3 @@
+.slides .slide [data-code] {
+    font-size: var(--code);
+}
