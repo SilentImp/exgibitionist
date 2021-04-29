@@ -74,6 +74,7 @@ html.captions.teleprompter:not(.fullscreen) .caption {
   right: var(--slide-gap);
   margin: auto;
   width: max-content;
+  max-width: calc(100% - (var(--slide-gap) * 2));
 }
 
 html.captions:not(.teleprompter) .caption span,

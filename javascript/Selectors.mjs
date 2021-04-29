@@ -11,9 +11,12 @@ const Selectors = {
   title: "title",
   main: "main",
   slideSelector: ".slide-selector",
+  timerController: ".timer-controller",
   slideSelectorInput: ".slide-selector input",
+  timerSelectorInput: ".timer-controller input",
   codeForResize: "[data-code]",
   htmlForCleanup: "[data-html]",
+  captions: ".caption span",
 };
 
 const ClassNames = {
@@ -24,6 +27,7 @@ const ClassNames = {
   fullscreen: "fullscreen",
   slideSelector: "slide-selector",
   slideSelectorVisibility: "visible",
+  timerControllerVisibility: "visible",
   teleprompter: "teleprompter",
   captions: "captions",
 };

@@ -29,6 +29,9 @@ export default {
   // Captions
   C: 67,
 
+  // Timer controller
+  T: 84,
+
   // Fullscreen toggle
   F: 70,
 

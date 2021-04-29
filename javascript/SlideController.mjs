@@ -43,9 +43,11 @@ class SlideController {
     this.prevKeys = [Keys.PgUp, Keys.Up, Keys.Left, Keys.H, Keys.K];
     this.controlsKeys = [Keys.cmd, Keys.ctrl, Keys.alt, Keys.shift];
     this.selectKeys = [Keys.enter];
+    this.submitFormKeys = [Keys.enter];
     this.exitFullscreenKeys = [Keys.esc];
     this.enterFullscreenKeys = [Keys.enter, Keys.F];
     this.slideSelectorKeys = [Keys.P];
+    this.timerControllerKeys = [Keys.T];
     this.captionKeys = [Keys.C];
     this.broadcastKeys = [Keys.B];
 
@@ -58,10 +60,15 @@ class SlideController {
     if (this.main === null) throw new Error("Main container not found");
     this.slides = this.container.querySelectorAll(Selectors.slide);
     if (this.slides === null) throw new Error("No slides found");
+    this.timerController = document.querySelector(Selectors.timerController);
+    if (this.timerController === null) throw new Error("Can't find timer control form");
     this.slideSelector = document.querySelector(Selectors.slideSelector);
     if (this.slideSelector === null) throw new Error("Can't find page control form");
     this.slideSelectorInput = document.querySelector(Selectors.slideSelectorInput);
     if (this.slideSelectorInput === null) throw new Error("Can't find input in page control form");
+    
+    this.timerSelectorInput = document.querySelector(Selectors.timerSelectorInput);
+    if (this.timerSelectorInput === null) throw new Error("Can't find input in timer control form");
 
     // Transform NodeList to Array
     this.slides = [...this.slides];
@@ -95,7 +102,9 @@ class SlideController {
     document.addEventListener('dblclick', this.dblClickController);
     document.addEventListener('keydown', this.keyDownController);
     document.addEventListener('keyup', this.keyUpController);
+
     this.slideSelector.addEventListener('submit', this.slideSelectorSubmit);
+    this.timerController.addEventListener('submit', this.timerControllerSubmit);
 
     // Set messager
     SlideController.messenger.register('slidecontroller:fullscreenchange', this.fullScreenChange);
@@ -115,10 +124,10 @@ class SlideController {
       bubbles: true,
     });
 
-    // update progress component
+    // Update progress component
     this.updateProgress();
 
-    // calculate scale and update it on window resize
+    // Calculate scale and update it on window resize
     this.calculateScale();
     const resizeObserver = new ResizeObserver(this.calculateScale);
     resizeObserver.observe(window.document.body);
@@ -132,10 +141,26 @@ class SlideController {
       });
     }
 
-    const captions = this.container.querySelectorAll('.caption span');
-    if (captions) [...captions].forEach(calculateMaxFontSize);
+    // Calculate captions font size and update it on window resize
+    this.calculateCaptionsSize();
+    const captionsResizeObserver = new ResizeObserver(this.calculateCaptionsSize);
+    captionsResizeObserver.observe(window.document.body);
 
+    // Show slides
     this.container.style.visibility = 'visible';
+  }
+
+  static isInsideForm () {
+    return SlideController.getActiveForm() !== null;
+  }
+
+  static getActiveForm () {
+    return document.activeElement.closest('form');
+  }
+
+  calculateCaptionsSize () {
+    const captions = this.container.querySelectorAll(Selectors.captions);
+    if (captions) [...captions].forEach(calculateMaxFontSize);
   }
 
   setMode (mode) {
@@ -277,8 +302,26 @@ class SlideController {
     return element.firstElementChild.getAttribute('data-number') - 1;
   }
 
+  timerControllerSubmit (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('timer controller submit');
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const minutes = data.get('minutes');
+
+    console.log('minutes: ', minutes);
+
+    this.toggleTimerController();
+    form.reset();
+  }
+
   slideSelectorSubmit (event) {
     event.preventDefault();
+    event.stopPropagation();
+    console.log('slide selector submit');
+
     const form = event.currentTarget;
     let slideNumber = parseInt(this.slideSelectorInput.value) - 1;
 
@@ -332,11 +375,43 @@ class SlideController {
 
   keyDownController (event) {
     const element = event.target;
+    const isInsideForm = SlideController.isInsideForm();
 
     // Control keys
     if (this.controlsKeys.includes(event.which) && !this.controlsPressed.includes(event.which)) {
       this.controlsPressed.push(event.which);
       return;
+    }
+
+    // close the form on esc
+    if (
+      this.exitFullscreenKeys.includes(event.which) && 
+      this.slideSelector.classList.contains(ClassNames.slideSelectorVisibility)
+    ) {
+      this.toggleSlideSelector();
+      return;
+    }
+
+    // close the form on esc
+    if (
+      this.exitFullscreenKeys.includes(event.which) && 
+      this.timerController.classList.contains(ClassNames.timerControllerVisibility)
+    ) {
+      this.toggleTimerController();
+      return;
+    }
+
+    // // submit the form on enter
+    // // Enter to switch fullscreen
+    // if (this.submitFormKeys.includes(event.which)) {
+    //   SlideController.getActiveForm()?.submit();
+    // }
+
+    if (isInsideForm) return;
+
+    if (this.timerControllerKeys.includes(event.which)) {
+      event.preventDefault();
+      this.toggleTimerController();
     }
 
     // Show slide selection form
@@ -390,17 +465,17 @@ class SlideController {
     }
 
     // Esc to exit fullscreen
-    if (this.exitFullscreenKeys.includes(event.which)) {
-      // If form of page select is open and visible — close it
-      if (this.slideSelector.classList.contains(ClassNames.slideSelectorVisibility)) {
-        this.toggleSlideSelector();
-      } else if (StateURL.fullscreen) { // if no page selector visible, but we are in fullscreen mode
-        SlideController.messenger.post("slidecontroller:fullscreenchange", {
-          detail: {
-            force: false,
-          },
-        });
-      }
+    if (
+      this.exitFullscreenKeys.includes(event.which)
+      && !this.slideSelector.classList.contains(ClassNames.slideSelectorVisibility)
+      && StateURL.fullscreen
+    ) {
+      // if no page selector visible, but we are in fullscreen mode
+      SlideController.messenger.post("slidecontroller:fullscreenchange", {
+        detail: {
+          force: false,
+        },
+      });
     }
 
     // Enter to switch fullscreen
@@ -419,6 +494,17 @@ class SlideController {
   toggleSlideSelector () {
     this.slideSelector.classList.toggle(ClassNames.slideSelectorVisibility);
     if (this.slideSelector.classList.contains(ClassNames.slideSelectorVisibility)) this.slideSelectorInput.focus();
+  }
+
+  // show or hide form to set up timer
+  toggleTimerController () {
+    this.timerController.classList.toggle(ClassNames.timerControllerVisibility);
+    if (this.timerController.classList.contains(ClassNames.timerControllerVisibility)) {
+      this.timerSelectorInput.focus();
+      this.timerSelectorInput.value = Options.talkDuration;
+    } else {
+      this.timerController.reset();
+    }
   }
 
   // get prev slide element

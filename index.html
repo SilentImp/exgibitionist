@@ -108,9 +108,49 @@ const f2l = new Fido2Lib({
     </ol>
   </main>
   <progress id="progress"></progress>
+
+  <meter id="timer"></meter>
+
   <form class="slide-selector">
-    <input aria-label="Page number" autocomplete="off" maxlength="3" size="3" pattern="[0-9]{1,3}" placeholder="1" type="text" inputmode="numeric" name="page">
+    <input 
+      aria-label="Page number" 
+      autocomplete="off" 
+      maxlength="3" 
+      size="3" 
+      pattern="[0-9]{1,3}" 
+      placeholder="1" 
+      type="number" 
+      inputmode="numeric" 
+      name="page">
   </form>
+
+  <form class="timer-controller">
+    <input 
+      aria-label="Munutes" 
+      autocomplete="off" 
+      maxlength="3" 
+      size="3" 
+      pattern="[0-9]{1,3}" 
+      placeholder="30"
+      type="number" 
+      inputmode="numeric" 
+      name="minutes">
+  </form>
+
+  <!-- <form class="timer-controller">
+    <fieldset>
+      <label>
+        Start at: 
+        <input autocomplete="off" placeholder="12:30" type="time" name="start" step="300">
+      </label>
+      <label>
+        Duration is: 
+        <input aria-label="Duration is" size="2" autocomplete="off" placeholder="30" type="number" inputmode="numeric" name="duration">
+        minutes
+      </label>
+    </fieldset>
+  </form> -->
+
   <script type="module" src="javascript/SlideController.mjs"></script>
   <script src="javascript/prism.js"></script>
 </body>

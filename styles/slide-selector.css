@@ -28,6 +28,12 @@
   outline: none;
 }
 
+.slide-selector input[type=number]::-webkit-inner-spin-button, 
+.slide-selector input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
 .slide-selector input:focus {
   box-shadow: 0 0 0 var(--slide-outline-width) var(--slide-outline-color-fucus);
 }
