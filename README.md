@@ -1,16 +1,29 @@
-# Авторизация
+<p align="center">
+  English |
+  <a href="https://github.com/SilentImp/exgibitionist/blob/master/README.ru.md">Pусский</a>
+</p>
 
-# Управление презентацией
+# How to start presentation
 
-| Назначение                       | Клавиша                                                 |
+```
+npx http-server
+```
+![Result of the npx http-server command execution](execution.png)
+Then open in browser http://127.0.0.1:8080
+Port could be different. 
+Use URL, that you see in the terminal, after command execuition.
+
+# Presentation controls
+
+| Description                      | Key                                                     |
 | :------------------------------- | ------------------------------------------------------- |
-| Следующий слайд                  | Стрелки вниз и вправо, клавиши L и J, PgDown, Tab       |
-| Предыдущий слайд                 | Стрелки вверх и влево, клавиши  H и K, PgUp, Shift+Tab  |
-| Выбрать слайд                    | Клик по слайду                                          |
-| Включить полноэкранный режим     | Enter (когда фокус на слайде), двойной щелчек по слайду |
-| Выключить полноэкранный режим    | ESC или Enter                                           |
-| Показать форму перехода к слайду | P                                                       |
-| Cкрыть форму перехода к слайду   | ESC или P                                               |
-| Сменить режим отображения телетекста или телесуфлера | C                                   |
-| Отключтиь синхронизацию слайдов в разных табах | B                                         |
+| Next slide                       | Right arrow, keys L and J, PgDown, Tab                  |
+| Previous slide                   | Left arrow, keys H and K, PgUp, Shift+Tab               |
+| Select slide                     | Click on slide                                          |
+| Go fullscreen                    | Enter (when slide focused), doubleclick on slide        |
+| Exit fullscreen                  | ESC or Enter                                            |
+| Show go to slide form            | P                                                       |
+| Hide go to slide form            | ESC or P                                                |
+| Switch to captions or teletype   | C                                                       |
+| Turn off slide number sync across tabs | B                                                 |
 
